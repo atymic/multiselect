@@ -11,7 +11,7 @@
   >
     <!-- Search -->
     <template v-if="mode !== 'tags' && searchable && !disabled">
-      <input    
+      <input
         :modelValue="search"
         :value="search"
         :class="classList.search"
@@ -42,18 +42,21 @@
             </span>
           </span>
         </slot>
-    
+
         <div :class="classList.tagsSearchWrapper">
           <!-- Used for measuring search width -->
           <span :class="classList.tagsSearchCopy">{{ search }}</span>
 
           <!-- Actual search input -->
-          <input    
+          <input
             v-if="searchable && !disabled"
             :modelValue="search"
             :value="search"
             :class="classList.tagsSearch"
             @input="handleSearchInput"
+            @paste="$emit('paste', $event)"
+            spellcheck="false"
+            autocomplete="false"
             ref="input"
           />
         </div>
@@ -137,7 +140,7 @@
 
     <!-- Hacky input element to show HTML5 required warning -->
     <input v-if="required" :class="classList.fakeInput" tabindex="-1" :value="textValue" required/>
-    
+
     <!-- Native input support -->
     <template v-if="nativeSupport">
       <input v-if="mode == 'single'" type="hidden" :name="name" :value="plainValue !== undefined ? plainValue : ''" />
@@ -161,13 +164,13 @@
   import usePointerAction from './composables/usePointerAction'
   import useDropdown from './composables/useDropdown'
   import useMultiselect from './composables/useMultiselect'
-  import useKeyboard from './composables/useKeyboard' 
-  import useClasses from './composables/useClasses' 
+  import useKeyboard from './composables/useKeyboard'
+  import useClasses from './composables/useClasses'
 
   export default {
     name: 'Multiselect',
     emits: [
-      'open', 'close', 'select', 'deselect', 
+      'open', 'close', 'select', 'deselect',
       'input', 'search-change', 'tag', 'update:modelValue',
       'change', 'clear'
     ],
@@ -363,7 +366,7 @@
       },
     },
     setup(props, context)
-    { 
+    {
       const value = useValue(props, context)
       const pointer = usePointer(props, context)
       const dropdown = useDropdown(props, context)
